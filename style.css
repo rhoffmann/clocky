@@ -283,7 +283,7 @@ body.fullscreen .digital-time {
     --minute-hand: #cd853f;
     --second-hand: #ebb031ff;
     --marker-color: #cd853f;
-    --text-color: #daa520;
+    --text-color: #af5800;
 }
 
 [data-style="classic"] .number {
