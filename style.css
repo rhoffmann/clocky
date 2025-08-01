@@ -1,0 +1,355 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --clock-bg: #ffffff;
+    --clock-border: #e0e0e0;
+    --hour-hand: #333333;
+    --minute-hand: #666666;
+    --second-hand: #ff4444;
+    --marker-color: #333333;
+    --button-bg: #f0f0f0;
+    --button-hover: #e0e0e0;
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --clock-bg: #2d2d2d;
+    --clock-border: #444444;
+    --hour-hand: #ffffff;
+    --minute-hand: #cccccc;
+    --second-hand: #ff6666;
+    --marker-color: #ffffff;
+    --button-bg: #333333;
+    --button-hover: #444444;
+    --shadow: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.controls {
+    position: absolute;
+    top: -80px;
+    right: 0;
+    display: flex;
+    gap: 1rem;
+    z-index: 10;
+}
+
+.theme-btn,
+.fullscreen-btn,
+.classic-btn {
+    background: var(--button-bg);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px var(--shadow);
+    color: var(--text-color);
+}
+
+.theme-btn:hover,
+.fullscreen-btn:hover,
+.classic-btn:hover {
+    background: var(--button-hover);
+    transform: scale(1.1);
+}
+
+.clock {
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+
+.clock-face {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 4px solid var(--clock-border);
+    border-radius: 50%;
+    background: var(--clock-bg);
+    box-shadow: 
+        0 0 30px var(--shadow),
+        inset 0 0 20px var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.hour-marker {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 50%;
+    transform-origin: bottom center;
+    margin-left: -1px;
+}
+
+.marker {
+    width: 2px;
+    height: 20px;
+    background: var(--marker-color);
+    margin: 0 auto;
+}
+
+.number {
+    position: absolute;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+.number-12 {
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.number-3 {
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.number-6 {
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.number-9 {
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.hand {
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    transform-origin: bottom center;
+    border-radius: 10px;
+    transition: all 0.1s ease;
+}
+
+.hour-hand {
+    width: 6px;
+    height: 60px;
+    background: var(--hour-hand);
+    margin-left: -3px;
+}
+
+.minute-hand {
+    width: 4px;
+    height: 110px;
+    background: var(--minute-hand);
+    margin-left: -2px;
+}
+
+.second-hand {
+    width: 2px;
+    height: 120px;
+    background: var(--second-hand);
+    margin-left: -1px;
+    transition: none;
+}
+
+.center-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    background: var(--second-hand);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.digital-time {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+    text-align: center;
+    padding: 1rem 2rem;
+    background: var(--button-bg);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px var(--shadow);
+    transition: all 0.3s ease;
+    min-width: 200px;
+}
+
+/* Fullscreen styles */
+body.fullscreen {
+    margin: 0;
+    padding: 0;
+}
+
+body.fullscreen {
+
+    .number {
+        font-size: 3rem;
+    }
+
+    .number-12 {
+        top: 40px;
+    }
+
+    .number-3 {
+        right: 40px;
+    }
+
+    .number-6 {
+        bottom: 40px;
+    }
+
+    .number-9 {
+        left: 40px;
+    }
+
+}
+
+body.fullscreen .container {
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+}
+
+body.fullscreen .clock {
+    width: 100vmin;
+    height: 100vmin;
+    max-width: none;
+    max-height: none;
+}
+
+body.fullscreen .controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+
+    body.fullscreen .digital-time {
+        font-size: 1.5rem;
+    }
+}
+
+/* Classic Clock Styles */
+[data-style="classic"] {
+    --clock-bg: #f5f1e8;
+    --clock-border: #8b4513;
+    --hour-hand: #654321;
+    --minute-hand: #8b4513;
+    --second-hand: #b8860b;
+    --marker-color: #654321;
+    --text-color: #654321;
+}
+
+[data-theme="dark"][data-style="classic"] {
+    --clock-bg: #2c1810;
+    --clock-border: #cd853f;
+    --hour-hand: #daa520;
+    --minute-hand: #cd853f;
+    --second-hand: #ffd700;
+    --marker-color: #cd853f;
+    --text-color: #daa520;
+}
+
+[data-style="classic"] .number {
+    font-family: 'Times New Roman', 'Georgia', serif;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+[data-style="classic"] .clock-face {
+    background: radial-gradient(circle, var(--clock-bg) 0%, #e8d7c3 100%);
+    border: 6px solid var(--clock-border);
+    box-shadow: 
+        0 0 40px rgba(139, 69, 19, 0.3),
+        inset 0 0 30px rgba(139, 69, 19, 0.1),
+        0 0 0 2px #8b4513;
+}
+
+[data-style="classic"] .marker {
+    background: linear-gradient(to bottom, var(--marker-color), #654321);
+    border-radius: 1px;
+}
+
+[data-style="classic"] .hour-hand {
+    background: linear-gradient(to top, var(--hour-hand), #8b4513);
+    border-radius: 3px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+
+[data-style="classic"] .minute-hand {
+    background: linear-gradient(to top, var(--minute-hand), #654321);
+    border-radius: 2px;
+    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+
+[data-style="classic"] .second-hand {
+    background: linear-gradient(to top, var(--second-hand), #b8860b);
+    border-radius: 1px;
+    box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
+[data-style="classic"] .center-dot {
+    background: radial-gradient(circle, var(--second-hand), #8b4513);
+    border: 2px solid #654321;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+/* Make markers longer in fullscreen */
+body.fullscreen .marker {
+    height: 35px;
+    width: 3px;
+}
+
+/* Make clock hands thicker and longer in fullscreen */
+body.fullscreen .hour-hand {
+    width: 8px;
+    height: 30vmin;
+    margin-left: -4px;
+}
+
+body.fullscreen .minute-hand {
+    width: 6px;
+    height: 35vmin;
+    margin-left: -3px;
+}
+
+body.fullscreen .second-hand {
+    width: 3px;
+    height: 40vmin;
+    margin-left: -1.5px;
+}
+
+body.fullscreen .center-dot {
+    width: 20px;
+    height: 20px;
+}

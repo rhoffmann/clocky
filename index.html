@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analog Clock</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <button id="themeToggle" class="theme-btn">🌙</button>
+            <button id="classicToggle" class="classic-btn">🏛️</button>
+            <button id="fullscreenToggle" class="fullscreen-btn">⛶</button>
+        </div>
+        
+        <div class="clock">
+            <div class="clock-face">
+                <!-- Hour markers -->
+                <div class="hour-marker" style="transform: rotate(0deg)"><div class="marker"></div></div>
+                <div class="hour-marker" style="transform: rotate(30deg)"><div class="marker"></div></div>
+                <div class="hour-marker" style="transform: rotate(60deg)"><div class="marker"></div></div>
+                <div class="hour-marker" style="transform: rotate(90deg)"><div class="marker"></div></div>
+                <div class="hour-marker" style="transform: rotate(120deg)"><div class="marker"></div></div>
+                <div class="hour-marker" style="transform: rotate(150deg)"><div class="marker"></div></div>
+                <div class="hour-marker" style="transform: rotate(180deg)"><div class="marker"></div></div>
+                <div class="hour-marker" style="transform: rotate(210deg)"><div class="marker"></div></div>
+                <div class="hour-marker" style="transform: rotate(240deg)"><div class="marker"></div></div>
+                <div class="hour-marker" style="transform: rotate(270deg)"><div class="marker"></div></div>
+                <div class="hour-marker" style="transform: rotate(300deg)"><div class="marker"></div></div>
+                <div class="hour-marker" style="transform: rotate(330deg)"><div class="marker"></div></div>
+                
+                <!-- Clock numbers -->
+                <div class="number number-12" data-modern="12" data-roman="XII">12</div>
+                <div class="number number-3" data-modern="3" data-roman="III">3</div>
+                <div class="number number-6" data-modern="6" data-roman="VI">6</div>
+                <div class="number number-9" data-modern="9" data-roman="IX">9</div>
+                
+                <!-- Clock hands -->
+                <div class="hand hour-hand" id="hourHand"></div>
+                <div class="hand minute-hand" id="minuteHand"></div>
+                <div class="hand second-hand" id="secondHand"></div>
+                
+                <!-- Center dot -->
+                <div class="center-dot"></div>
+            </div>
+        </div>
+        
+        <!-- <div class="digital-time" id="digitalTime"></div> -->
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
