@@ -254,14 +254,19 @@ body.fullscreen .controls {
     right: 20px;
 }
 
-    body.fullscreen .digital-time {
-        font-size: 1.5rem;
-    }
+body.fullscreen .theme-btn,
+body.fullscreen .classic-btn {
+    display: none;
+}
+
+body.fullscreen .digital-time {
+    font-size: 1.5rem;
 }
 
 /* Classic Clock Styles */
 [data-style="classic"] {
     --clock-bg: #f5f1e8;
+    --clock-bg-outer: #f5f1e8;
     --clock-border: #8b4513;
     --hour-hand: #654321;
     --minute-hand: #8b4513;
@@ -272,10 +277,11 @@ body.fullscreen .controls {
 
 [data-theme="dark"][data-style="classic"] {
     --clock-bg: #2c1810;
+    --clock-bg-outer: #000000;
     --clock-border: #cd853f;
     --hour-hand: #daa520;
     --minute-hand: #cd853f;
-    --second-hand: #ffd700;
+    --second-hand: #ebb031ff;
     --marker-color: #cd853f;
     --text-color: #daa520;
 }
@@ -287,7 +293,7 @@ body.fullscreen .controls {
 }
 
 [data-style="classic"] .clock-face {
-    background: radial-gradient(circle, var(--clock-bg) 0%, #e8d7c3 100%);
+    background: radial-gradient(circle, var(--clock-bg) 0%, var(--clock-bg-outer) 100%);
     border: 6px solid var(--clock-border);
     box-shadow: 
         0 0 40px rgba(139, 69, 19, 0.3),
