@@ -252,6 +252,7 @@ body.fullscreen .controls {
     position: fixed;
     top: 20px;
     right: 20px;
+    z-index: 15; /* Higher than touch zones */
 }
 
 body.fullscreen .theme-btn,
@@ -358,4 +359,41 @@ body.fullscreen .second-hand {
 body.fullscreen .center-dot {
     width: 20px;
     height: 20px;
+}
+
+/* Touch zones for fullscreen mode */
+.touch-zone {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 5; /* Lower than controls (z-index: 10) to avoid blocking buttons */
+    background: transparent;
+    cursor: pointer;
+    display: none; /* Hidden by default */
+    transition: background-color 0.2s ease;
+    pointer-events: auto;
+}
+
+/* Show touch zones only in fullscreen */
+body.fullscreen .touch-zone {
+    display: block;
+}
+
+.touch-zone-top {
+    top: 0;
+    height: 25%;
+}
+
+.touch-zone-bottom {
+    bottom: 0;
+    height: 25%;
+}
+
+/* Optional visual feedback on touch */
+.touch-zone:active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .touch-zone:active {
+    background-color: rgba(255, 255, 255, 0.05);
 }

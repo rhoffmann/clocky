@@ -7,6 +7,8 @@ class AnalogClock {
         this.themeToggle = document.getElementById('themeToggle');
         this.classicToggle = document.getElementById('classicToggle');
         this.fullscreenToggle = document.getElementById('fullscreenToggle');
+        this.topTouchZone = document.getElementById('topTouchZone');
+        this.bottomTouchZone = document.getElementById('bottomTouchZone');
         
         this.isFullscreen = false;
         this.isDarkMode = false;
@@ -23,8 +25,8 @@ class AnalogClock {
         this.setupEventListeners();
         this.loadThemePreference();
         this.loadStylePreference();
+        this.initByURL();
         
-        // Update every second
         setInterval(() => {
             this.updateClock();
             if (this.digitalTime) {
@@ -124,6 +126,39 @@ class AnalogClock {
                 this.exitFullscreen();
             }
         });
+
+        // Touch zones for fullscreen mode
+        if (this.topTouchZone) {
+            this.topTouchZone.addEventListener('click', () => {
+                if (this.isFullscreen) {
+                    this.toggleClassic();
+                }
+            });
+
+            // Add touch event for better mobile support
+            this.topTouchZone.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                if (this.isFullscreen) {
+                    this.toggleClassic();
+                }
+            });
+        }
+
+        if (this.bottomTouchZone) {
+            this.bottomTouchZone.addEventListener('click', () => {
+                if (this.isFullscreen) {
+                    this.toggleTheme();
+                }
+            });
+
+            // Add touch event for better mobile support
+            this.bottomTouchZone.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                if (this.isFullscreen) {
+                    this.toggleTheme();
+                }
+            });
+        }
     }
     
     toggleTheme() {
@@ -154,6 +189,15 @@ class AnalogClock {
         }
     }
     
+    initByURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlFullscreen = urlParams.get('fullscreen') == 'true';
+
+        if (urlFullscreen) {
+            this.enterFullscreen();
+        }
+    }
+
     toggleClassic() {
         this.isClassic = !this.isClassic;
         document.documentElement.setAttribute('data-style', this.isClassic ? 'classic' : 'modern');
