@@ -209,6 +209,8 @@ body {
 }
 
 .digital-time {
+    font-family:
+        "DSEG14 Classic Mini", "Courier New", "Monaco", "Menlo", monospace;
     margin: 2rem auto 0;
     padding: 2rem 3rem;
     background: var(--digital-bg);
@@ -219,8 +221,8 @@ body {
 }
 
 .digital-time-display {
-    font-family:
-        "DSEG14 Classic Mini", "Courier New", "Monaco", "Menlo", monospace;
+    /*font-family:
+        "DSEG14 Classic Mini", "Courier New", "Monaco", "Menlo", monospace;*/
     font-size: 5rem;
     /*font-weight: bold;*/
     color: var(--digital-time-color);
@@ -233,8 +235,11 @@ body {
 }
 
 .digital-date-display {
-    font-family: "Arial", sans-serif;
+    /*font-family:
+        "DSEG14 Classic Mini", "Courier New", "Monaco", "Menlo", monospace;*/
+    /*font-family: "Arial", sans-serif;*/
     font-size: 1.2rem;
+    text-align: center;
     color: var(--digital-date-color);
     text-shadow: 0 0 5px var(--digital-date-color);
     opacity: 0.9;
@@ -311,15 +316,7 @@ body.fullscreen .digital-time {
     /*bottom: 10vh;*/
     left: 50%;
     transform: translateX(-50%);
-    font-size: 1.5rem;
-}
-
-body.fullscreen .digital-time-display {
-    font-size: 8vw;
-}
-
-body.fullscreen .digital-date-display {
-    font-size: 3vw;
+    /*font-size: 1.5rem;*/
 }
 
 /* Fullscreen digital variant */
@@ -333,16 +330,18 @@ body.fullscreen[data-variant="digital"] .digital-time {
     left: 50%;
     transform: translate(-50%, -50%);
     margin: 0;
+
     /*padding: 4rem 6rem;*/
-    width: 90vw;
+    width: 100%;
 }
 
 body.fullscreen[data-variant="digital"] .digital-time-display {
-    font-size: 12vw;
+    font-size: 22vw;
 }
 
 body.fullscreen[data-variant="digital"] .digital-date-display {
-    font-size: 7vw;
+    margin-top: 5rem;
+    font-size: 8vw;
 }
 
 /* Classic Clock Styles */
