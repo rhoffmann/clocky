@@ -1,22 +1,24 @@
 class AnalogClock {
     constructor() {
-        this.hourHand = document.getElementById('hourHand');
-        this.minuteHand = document.getElementById('minuteHand');
-        this.secondHand = document.getElementById('secondHand');
-        this.digitalTime = document.getElementById('digitalTime');
-        this.themeToggle = document.getElementById('themeToggle');
-        this.classicToggle = document.getElementById('classicToggle');
-        this.fullscreenToggle = document.getElementById('fullscreenToggle');
-        this.topTouchZone = document.getElementById('topTouchZone');
-        this.bottomTouchZone = document.getElementById('bottomTouchZone');
-        
+        this.hourHand = document.getElementById("hourHand");
+        this.minuteHand = document.getElementById("minuteHand");
+        this.secondHand = document.getElementById("secondHand");
+        this.digitalTime = document.getElementById("digitalTime");
+        this.themeToggle = document.getElementById("themeToggle");
+        this.classicToggle = document.getElementById("classicToggle");
+        this.digitalToggle = document.getElementById("digitalToggle");
+        this.fullscreenToggle = document.getElementById("fullscreenToggle");
+        this.topTouchZone = document.getElementById("topTouchZone");
+        this.bottomTouchZone = document.getElementById("bottomTouchZone");
+
         this.isFullscreen = false;
         this.isDarkMode = false;
         this.isClassic = false;
-        
+        this.isDigital = false;
+
         this.init();
     }
-    
+
     init() {
         this.updateClock();
         if (this.digitalTime) {
@@ -25,8 +27,9 @@ class AnalogClock {
         this.setupEventListeners();
         this.loadThemePreference();
         this.loadStylePreference();
+        this.loadDigitalPreference();
         this.initByURL();
-        
+
         setInterval(() => {
             this.updateClock();
             if (this.digitalTime) {
@@ -34,109 +37,117 @@ class AnalogClock {
             }
         }, 1000);
     }
-    
+
     updateClock() {
         const now = new Date();
         const seconds = now.getSeconds();
         const minutes = now.getMinutes();
         const hours = now.getHours(); // Use 24-hour format but convert for display
-        
+
         // Calculate angles (starting from 12 o'clock position)
-        const secondAngle = (seconds * 6); // 6 degrees per second
-        const minuteAngle = (minutes * 6) + (seconds * 0.1); // 6 degrees per minute + smooth seconds
-        const hourAngle = ((hours % 12) * 30) + (minutes * 0.5); // 30 degrees per hour + smooth minutes
-        
+        const secondAngle = seconds * 6; // 6 degrees per second
+        const minuteAngle = minutes * 6 + seconds * 0.1; // 6 degrees per minute + smooth seconds
+        const hourAngle = (hours % 12) * 30 + minutes * 0.5; // 30 degrees per hour + smooth minutes
+
         // Apply rotations
         this.secondHand.style.transform = `rotate(${secondAngle}deg)`;
         this.minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
         this.hourHand.style.transform = `rotate(${hourAngle}deg)`;
     }
-    
+
     updateDigitalTime() {
         // Only update digital time if the element exists
         if (this.digitalTime) {
             const now = new Date();
-            const timeString = now.toLocaleTimeString('en-US', {
+            const timeString = now.toLocaleTimeString("en-US", {
                 hour12: false, // Use 24-hour format
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
             });
-            
-            const dateString = now.toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+
+            const dateString = now.toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
             });
-            
+
             this.digitalTime.innerHTML = `
-                <div>${timeString}</div>
-                <div style="font-size: 0.8em; opacity: 0.8; margin-top: 0.5rem;">${dateString}</div>
+                <div class="digital-time-display">${timeString}</div>
+                <div class="digital-date-display">${dateString}</div>
             `;
         }
     }
-    
+
     setupEventListeners() {
         // Only add listeners if elements exist
         if (this.themeToggle) {
-            this.themeToggle.addEventListener('click', () => {
+            this.themeToggle.addEventListener("click", () => {
                 this.toggleTheme();
             });
         }
-        
+
         if (this.classicToggle) {
-            this.classicToggle.addEventListener('click', () => {
+            this.classicToggle.addEventListener("click", () => {
                 this.toggleClassic();
             });
         }
-        
+
+        if (this.digitalToggle) {
+            this.digitalToggle.addEventListener("click", () => {
+                this.toggleDigital();
+            });
+        }
+
         if (this.fullscreenToggle) {
-            this.fullscreenToggle.addEventListener('click', () => {
+            this.fullscreenToggle.addEventListener("click", () => {
                 this.toggleFullscreen();
             });
         }
-        
+
         // Handle fullscreen change events
-        document.addEventListener('fullscreenchange', () => {
+        document.addEventListener("fullscreenchange", () => {
             this.handleFullscreenChange();
         });
-        
-        document.addEventListener('webkitfullscreenchange', () => {
+
+        document.addEventListener("webkitfullscreenchange", () => {
             this.handleFullscreenChange();
         });
-        
-        document.addEventListener('mozfullscreenchange', () => {
+
+        document.addEventListener("mozfullscreenchange", () => {
             this.handleFullscreenChange();
         });
-        
-        document.addEventListener('MSFullscreenChange', () => {
+
+        document.addEventListener("MSFullscreenChange", () => {
             this.handleFullscreenChange();
         });
-        
+
         // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'f' || e.key === 'F') {
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "f" || e.key === "F") {
                 this.toggleFullscreen();
-            } else if (e.key === 't' || e.key === 'T') {
+            } else if (e.key === "t" || e.key === "T") {
                 this.toggleTheme();
-            } else if (e.key === 'c' || e.key === 'C') {
+            } else if (e.key === "c" || e.key === "C") {
                 this.toggleClassic();
-            } else if (e.key === 'Escape' && this.isFullscreen) {
+            } else if (e.key === "d" || e.key === "D") {
+                this.toggleDigital();
+            } else if (e.key === "Escape" && this.isFullscreen) {
                 this.exitFullscreen();
             }
         });
 
         // Touch zones for fullscreen mode
         if (this.topTouchZone) {
-            this.topTouchZone.addEventListener('click', () => {
+            this.topTouchZone.addEventListener("click", () => {
                 if (this.isFullscreen) {
                     this.toggleClassic();
                 }
             });
 
             // Add touch event for better mobile support
-            this.topTouchZone.addEventListener('touchend', (e) => {
+            this.topTouchZone.addEventListener("touchend", (e) => {
                 e.preventDefault();
                 if (this.isFullscreen) {
                     this.toggleClassic();
@@ -145,14 +156,14 @@ class AnalogClock {
         }
 
         if (this.bottomTouchZone) {
-            this.bottomTouchZone.addEventListener('click', () => {
+            this.bottomTouchZone.addEventListener("click", () => {
                 if (this.isFullscreen) {
                     this.toggleTheme();
                 }
             });
 
             // Add touch event for better mobile support
-            this.bottomTouchZone.addEventListener('touchend', (e) => {
+            this.bottomTouchZone.addEventListener("touchend", (e) => {
                 e.preventDefault();
                 if (this.isFullscreen) {
                     this.toggleTheme();
@@ -160,38 +171,41 @@ class AnalogClock {
             });
         }
     }
-    
+
     toggleTheme() {
         this.isDarkMode = !this.isDarkMode;
-        document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
+        document.documentElement.setAttribute(
+            "data-theme",
+            this.isDarkMode ? "dark" : "light",
+        );
         if (this.themeToggle) {
-            this.themeToggle.textContent = this.isDarkMode ? '☀️' : '🌙';
+            this.themeToggle.textContent = this.isDarkMode ? "☀️" : "🌙";
         }
-        
+
         // Save preference
-        localStorage.setItem('clockTheme', this.isDarkMode ? 'dark' : 'light');
+        localStorage.setItem("clockTheme", this.isDarkMode ? "dark" : "light");
     }
-    
+
     loadThemePreference() {
-        const savedTheme = localStorage.getItem('clockTheme');
-        if (savedTheme === 'dark') {
+        const savedTheme = localStorage.getItem("clockTheme");
+        if (savedTheme === "dark") {
             this.isDarkMode = true;
-            document.documentElement.setAttribute('data-theme', 'dark');
+            document.documentElement.setAttribute("data-theme", "dark");
             if (this.themeToggle) {
-                this.themeToggle.textContent = '☀️';
+                this.themeToggle.textContent = "☀️";
             }
         } else {
             this.isDarkMode = false;
-            document.documentElement.setAttribute('data-theme', 'light');
+            document.documentElement.setAttribute("data-theme", "light");
             if (this.themeToggle) {
-                this.themeToggle.textContent = '🌙';
+                this.themeToggle.textContent = "🌙";
             }
         }
     }
-    
+
     initByURL() {
         const urlParams = new URLSearchParams(window.location.search);
-        const urlFullscreen = urlParams.get('fullscreen') == 'true';
+        const urlFullscreen = urlParams.get("fullscreen") == "true";
 
         if (urlFullscreen) {
             this.enterFullscreen();
@@ -200,36 +214,86 @@ class AnalogClock {
 
     toggleClassic() {
         this.isClassic = !this.isClassic;
-        document.documentElement.setAttribute('data-style', this.isClassic ? 'classic' : 'modern');
+        document.documentElement.setAttribute(
+            "data-style",
+            this.isClassic ? "classic" : "modern",
+        );
         this.updateNumbers();
-        
+
         // Save preference
-        localStorage.setItem('clockStyle', this.isClassic ? 'classic' : 'modern');
+        localStorage.setItem(
+            "clockStyle",
+            this.isClassic ? "classic" : "modern",
+        );
     }
-    
+
+    toggleDigital() {
+        this.isDigital = !this.isDigital;
+        document.documentElement.setAttribute(
+            "data-display",
+            this.isDigital ? "digital" : "analog",
+        );
+
+        // Update button appearance or provide visual feedback
+        if (this.digitalToggle) {
+            this.digitalToggle.style.background = this.isDigital
+                ? "var(--digital-time-color)"
+                : "var(--button-bg)";
+            this.digitalToggle.style.color = this.isDigital
+                ? "#000"
+                : "var(--text-color)";
+        }
+
+        // Save preference
+        localStorage.setItem(
+            "clockDisplay",
+            this.isDigital ? "digital" : "analog",
+        );
+    }
+
     loadStylePreference() {
-        const savedStyle = localStorage.getItem('clockStyle');
-        if (savedStyle === 'classic') {
+        const savedStyle = localStorage.getItem("clockStyle");
+        if (savedStyle === "classic") {
             this.isClassic = true;
-            document.documentElement.setAttribute('data-style', 'classic');
+            document.documentElement.setAttribute("data-style", "classic");
             this.updateNumbers();
         } else {
             this.isClassic = false;
-            document.documentElement.setAttribute('data-style', 'modern');
+            document.documentElement.setAttribute("data-style", "modern");
         }
     }
-    
+
+    loadDigitalPreference() {
+        const savedDisplay = localStorage.getItem("clockDisplay");
+        if (savedDisplay === "digital") {
+            this.isDigital = true;
+            document.documentElement.setAttribute("data-display", "digital");
+            if (this.digitalToggle) {
+                this.digitalToggle.style.background =
+                    "var(--digital-time-color)";
+                this.digitalToggle.style.color = "#000";
+            }
+        } else {
+            this.isDigital = false;
+            document.documentElement.setAttribute("data-display", "analog");
+            if (this.digitalToggle) {
+                this.digitalToggle.style.background = "var(--button-bg)";
+                this.digitalToggle.style.color = "var(--text-color)";
+            }
+        }
+    }
+
     updateNumbers() {
-        const numbers = document.querySelectorAll('.number');
-        numbers.forEach(number => {
+        const numbers = document.querySelectorAll(".number");
+        numbers.forEach((number) => {
             if (this.isClassic) {
-                number.textContent = number.getAttribute('data-roman');
+                number.textContent = number.getAttribute("data-roman");
             } else {
-                number.textContent = number.getAttribute('data-modern');
+                number.textContent = number.getAttribute("data-modern");
             }
         });
     }
-    
+
     toggleFullscreen() {
         if (!this.isFullscreen) {
             this.enterFullscreen();
@@ -237,10 +301,10 @@ class AnalogClock {
             this.exitFullscreen();
         }
     }
-    
+
     enterFullscreen() {
         const element = document.documentElement;
-        
+
         if (element.requestFullscreen) {
             element.requestFullscreen();
         } else if (element.webkitRequestFullscreen) {
@@ -251,7 +315,7 @@ class AnalogClock {
             element.msRequestFullscreen();
         }
     }
-    
+
     exitFullscreen() {
         if (document.exitFullscreen) {
             document.exitFullscreen();
@@ -263,7 +327,7 @@ class AnalogClock {
             document.msExitFullscreen();
         }
     }
-    
+
     handleFullscreenChange() {
         this.isFullscreen = !!(
             document.fullscreenElement ||
@@ -271,37 +335,37 @@ class AnalogClock {
             document.mozFullScreenElement ||
             document.msFullscreenElement
         );
-        
-        document.body.classList.toggle('fullscreen', this.isFullscreen);
+
+        document.body.classList.toggle("fullscreen", this.isFullscreen);
         if (this.fullscreenToggle) {
-            this.fullscreenToggle.textContent = this.isFullscreen ? '⛶' : '⛶';
+            this.fullscreenToggle.textContent = this.isFullscreen ? "⛶" : "⛶";
         }
     }
 }
 
 // Initialize the clock when the page loads
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     new AnalogClock();
 });
 
 // Add some visual feedback for interactions
-document.addEventListener('DOMContentLoaded', () => {
-    const buttons = document.querySelectorAll('button');
-    
-    buttons.forEach(button => {
-        button.addEventListener('mousedown', () => {
-            button.style.transform = 'scale(0.95)';
+document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll("button");
+
+    buttons.forEach((button) => {
+        button.addEventListener("mousedown", () => {
+            button.style.transform = "scale(0.95)";
         });
-        
-        button.addEventListener('mouseup', () => {
-            button.style.transform = 'scale(1.1)';
+
+        button.addEventListener("mouseup", () => {
+            button.style.transform = "scale(1.1)";
             setTimeout(() => {
-                button.style.transform = 'scale(1)';
+                button.style.transform = "scale(1)";
             }, 150);
         });
-        
-        button.addEventListener('mouseleave', () => {
-            button.style.transform = 'scale(1)';
+
+        button.addEventListener("mouseleave", () => {
+            button.style.transform = "scale(1)";
         });
     });
 });
