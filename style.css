@@ -1,3 +1,11 @@
+@font-face {
+    font-family: "DSEG14 Classic Mini";
+    src: url("fonts/DSEG14ClassicMini-Regular.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
     --bg-color: #ffffff;
     --text-color: #333333;
@@ -16,7 +24,7 @@
 }
 
 [data-theme="dark"] {
-    --bg-color: #1a1a1a;
+    --bg-color: #000000;
     --text-color: #ffffff;
     --clock-bg: #2d2d2d;
     --clock-border: #444444;
@@ -69,8 +77,7 @@ body {
 
 .theme-btn,
 .fullscreen-btn,
-.classic-btn,
-.digital-btn {
+.classic-btn {
     background: var(--button-bg);
     border: none;
     border-radius: 50%;
@@ -85,8 +92,7 @@ body {
 
 .theme-btn:hover,
 .fullscreen-btn:hover,
-.classic-btn:hover,
-.digital-btn:hover {
+.classic-btn:hover {
     background: var(--button-hover);
     transform: scale(1.1);
 }
@@ -203,24 +209,20 @@ body {
 }
 
 .digital-time {
-    margin-top: 2rem;
+    margin: 2rem auto 0;
     padding: 2rem 3rem;
     background: var(--digital-bg);
-    border-radius: 15px;
-    box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.3),
-        inset 0 2px 5px rgba(255, 140, 0, 0.1);
-    border: 2px solid #333;
     text-align: center;
-    min-width: 280px;
+    width: 90%;
     transition: all 0.3s ease;
     display: none; /* Hidden by default */
 }
 
 .digital-time-display {
-    font-family: "Courier New", "Monaco", "Menlo", monospace;
-    font-size: 3.5rem;
-    font-weight: bold;
+    font-family:
+        "DSEG14 Classic Mini", "Courier New", "Monaco", "Menlo", monospace;
+    font-size: 5rem;
+    /*font-weight: bold;*/
     color: var(--digital-time-color);
     text-shadow:
         0 0 10px var(--digital-time-color),
@@ -241,17 +243,13 @@ body {
 }
 
 /* Digital Clock Mode */
-[data-display="digital"] .clock {
-    opacity: 0.3;
-    transform: scale(0.7);
+/* Digital Clock Variant */
+[data-variant="digital"] .clock {
+    display: none;
 }
 
-[data-display="digital"] .digital-time {
+[data-variant="digital"] .digital-time {
     display: block;
-}
-
-[data-display="digital"] .controls {
-    top: -120px;
 }
 
 /* Fullscreen styles */
@@ -310,7 +308,7 @@ body.fullscreen .classic-btn {
 body.fullscreen .digital-time {
     margin-top: 0;
     position: fixed;
-    bottom: 10vh;
+    /*bottom: 10vh;*/
     left: 50%;
     transform: translateX(-50%);
     font-size: 1.5rem;
@@ -324,34 +322,32 @@ body.fullscreen .digital-date-display {
     font-size: 3vw;
 }
 
-/* Fullscreen digital mode */
-body.fullscreen[data-display="digital"] .clock {
+/* Fullscreen digital variant */
+body.fullscreen[data-variant="digital"] .clock {
     display: none;
 }
 
-body.fullscreen[data-display="digital"] .digital-time {
+body.fullscreen[data-variant="digital"] .digital-time {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     margin: 0;
-    padding: 4rem 6rem;
-    width: 80vw;
-    max-width: 800px;
+    /*padding: 4rem 6rem;*/
+    width: 90vw;
 }
 
-body.fullscreen[data-display="digital"] .digital-time-display {
+body.fullscreen[data-variant="digital"] .digital-time-display {
     font-size: 12vw;
-    max-font-size: 8rem;
 }
 
-body.fullscreen[data-display="digital"] .digital-date-display {
-    font-size: 4vw;
-    max-font-size: 2rem;
+body.fullscreen[data-variant="digital"] .digital-date-display {
+    font-size: 7vw;
 }
 
 /* Classic Clock Styles */
-[data-style="classic"] {
+/* Classic Clock Variant */
+[data-variant="classic"] {
     --clock-bg: #f5f1e8;
     --clock-bg-outer: #f5f1e8;
     --clock-border: #8b4513;
@@ -362,7 +358,7 @@ body.fullscreen[data-display="digital"] .digital-date-display {
     --text-color: #654321;
 }
 
-[data-theme="dark"][data-style="classic"] {
+[data-theme="dark"][data-variant="classic"] {
     --clock-bg: #2c1810;
     --clock-bg-outer: #000000;
     --clock-border: #cd853f;
@@ -373,13 +369,13 @@ body.fullscreen[data-display="digital"] .digital-date-display {
     --text-color: #af5800;
 }
 
-[data-style="classic"] .number {
+[data-variant="classic"] .number {
     font-family: "Times New Roman", "Georgia", serif;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-[data-style="classic"] .clock-face {
+[data-variant="classic"] .clock-face {
     background: radial-gradient(
         circle,
         var(--clock-bg) 0%,
@@ -392,30 +388,30 @@ body.fullscreen[data-display="digital"] .digital-date-display {
         0 0 0 2px #8b4513;
 }
 
-[data-style="classic"] .marker {
+[data-variant="classic"] .marker {
     background: linear-gradient(to bottom, var(--marker-color), #654321);
     border-radius: 1px;
 }
 
-[data-style="classic"] .hour-hand {
+[data-variant="classic"] .hour-hand {
     background: linear-gradient(to top, var(--hour-hand), #8b4513);
     border-radius: 3px;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
 
-[data-style="classic"] .minute-hand {
+[data-variant="classic"] .minute-hand {
     background: linear-gradient(to top, var(--minute-hand), #654321);
     border-radius: 2px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 }
 
-[data-style="classic"] .second-hand {
+[data-variant="classic"] .second-hand {
     background: linear-gradient(to top, var(--second-hand), #b8860b);
     border-radius: 1px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }
 
-[data-style="classic"] .center-dot {
+[data-variant="classic"] .center-dot {
     background: radial-gradient(circle, var(--second-hand), #8b4513);
     border: 2px solid #654321;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);

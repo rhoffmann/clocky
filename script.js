@@ -6,15 +6,13 @@ class AnalogClock {
         this.digitalTime = document.getElementById("digitalTime");
         this.themeToggle = document.getElementById("themeToggle");
         this.classicToggle = document.getElementById("classicToggle");
-        this.digitalToggle = document.getElementById("digitalToggle");
         this.fullscreenToggle = document.getElementById("fullscreenToggle");
         this.topTouchZone = document.getElementById("topTouchZone");
         this.bottomTouchZone = document.getElementById("bottomTouchZone");
 
         this.isFullscreen = false;
         this.isDarkMode = false;
-        this.isClassic = false;
-        this.isDigital = false;
+        this.variant = "modern"; // 'modern', 'classic', 'digital'
 
         this.init();
     }
@@ -27,7 +25,6 @@ class AnalogClock {
         this.setupEventListeners();
         this.loadThemePreference();
         this.loadStylePreference();
-        this.loadDigitalPreference();
         this.initByURL();
 
         setInterval(() => {
@@ -94,12 +91,6 @@ class AnalogClock {
             });
         }
 
-        if (this.digitalToggle) {
-            this.digitalToggle.addEventListener("click", () => {
-                this.toggleDigital();
-            });
-        }
-
         if (this.fullscreenToggle) {
             this.fullscreenToggle.addEventListener("click", () => {
                 this.toggleFullscreen();
@@ -131,8 +122,6 @@ class AnalogClock {
                 this.toggleTheme();
             } else if (e.key === "c" || e.key === "C") {
                 this.toggleClassic();
-            } else if (e.key === "d" || e.key === "D") {
-                this.toggleDigital();
             } else if (e.key === "Escape" && this.isFullscreen) {
                 this.exitFullscreen();
             }
@@ -213,85 +202,57 @@ class AnalogClock {
     }
 
     toggleClassic() {
-        this.isClassic = !this.isClassic;
-        document.documentElement.setAttribute(
-            "data-style",
-            this.isClassic ? "classic" : "modern",
-        );
-        this.updateNumbers();
-
-        // Save preference
-        localStorage.setItem(
-            "clockStyle",
-            this.isClassic ? "classic" : "modern",
-        );
-    }
-
-    toggleDigital() {
-        this.isDigital = !this.isDigital;
-        document.documentElement.setAttribute(
-            "data-display",
-            this.isDigital ? "digital" : "analog",
-        );
-
-        // Update button appearance or provide visual feedback
-        if (this.digitalToggle) {
-            this.digitalToggle.style.background = this.isDigital
-                ? "var(--digital-time-color)"
-                : "var(--button-bg)";
-            this.digitalToggle.style.color = this.isDigital
-                ? "#000"
-                : "var(--text-color)";
+        // Cycle through the three variants
+        if (this.variant === "modern") {
+            this.variant = "classic";
+        } else if (this.variant === "classic") {
+            this.variant = "digital";
+        } else {
+            this.variant = "modern";
         }
 
+        // Update the document attributes
+        document.documentElement.setAttribute("data-variant", this.variant);
+        this.updateNumbers();
+        this.updateVariantButton();
+
         // Save preference
-        localStorage.setItem(
-            "clockDisplay",
-            this.isDigital ? "digital" : "analog",
-        );
+        localStorage.setItem("clockVariant", this.variant);
     }
 
     loadStylePreference() {
-        const savedStyle = localStorage.getItem("clockStyle");
-        if (savedStyle === "classic") {
-            this.isClassic = true;
-            document.documentElement.setAttribute("data-style", "classic");
-            this.updateNumbers();
+        const savedVariant = localStorage.getItem("clockVariant");
+        if (savedVariant === "classic" || savedVariant === "digital") {
+            this.variant = savedVariant;
         } else {
-            this.isClassic = false;
-            document.documentElement.setAttribute("data-style", "modern");
+            this.variant = "modern";
         }
-    }
-
-    loadDigitalPreference() {
-        const savedDisplay = localStorage.getItem("clockDisplay");
-        if (savedDisplay === "digital") {
-            this.isDigital = true;
-            document.documentElement.setAttribute("data-display", "digital");
-            if (this.digitalToggle) {
-                this.digitalToggle.style.background =
-                    "var(--digital-time-color)";
-                this.digitalToggle.style.color = "#000";
-            }
-        } else {
-            this.isDigital = false;
-            document.documentElement.setAttribute("data-display", "analog");
-            if (this.digitalToggle) {
-                this.digitalToggle.style.background = "var(--button-bg)";
-                this.digitalToggle.style.color = "var(--text-color)";
-            }
-        }
+        document.documentElement.setAttribute("data-variant", this.variant);
+        this.updateNumbers();
+        this.updateVariantButton();
     }
 
     updateNumbers() {
         const numbers = document.querySelectorAll(".number");
         numbers.forEach((number) => {
-            if (this.isClassic) {
+            if (this.variant === "classic") {
                 number.textContent = number.getAttribute("data-roman");
             } else {
                 number.textContent = number.getAttribute("data-modern");
             }
         });
+    }
+
+    updateVariantButton() {
+        if (this.classicToggle) {
+            if (this.variant === "modern") {
+                this.classicToggle.textContent = "🎨";
+            } else if (this.variant === "classic") {
+                this.classicToggle.textContent = "🏛️";
+            } else if (this.variant === "digital") {
+                this.classicToggle.textContent = "🔢";
+            }
+        }
     }
 
     toggleFullscreen() {
